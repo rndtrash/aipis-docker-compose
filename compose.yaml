@@ -1,0 +1,64 @@
+services:
+  postgresql:
+    image: "postgres:latest"
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./mount:/var/lib/postgresql/data
+      # Лёша, ёбаный насрал, мог бы и сам в своей хуйне создать базу данных, вот теперь заёбываюсь с инит скриптом
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    expose:
+      - "5432"
+
+  backend_ts:
+    build: ./backend_ts
+    environment:
+      DB_HOST: postgresql
+      PORT: 8080
+    networks:
+      - app-network
+    depends_on:
+      - postgresql
+    expose:
+      - "8080"
+    secrets:
+      - backend_ts_secrets
+
+  # backend_kt:
+    # build: backend_kt
+    # networks:
+      # - app-network
+    # depends_on:
+      # - postgresql
+    # expose:
+      # - "80"
+    # secrets:
+      # - backend_kt_secrets
+
+  nginx:
+    image: "nginx:latest"
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "${ENDPOINT_PORT}:8080"
+    networks:
+      - app-network
+    depends_on:
+      - backend_ts
+      # - backend_kt
+
+# TODO: эти секреты пока что нахуй никому не усрались, лежат себе в папке /run/secrets
+secrets:
+  backend_ts_secrets:
+    file: ./backend_ts.env
+
+  backend_kt_secrets:
+    file: ./backend_kt.env
+
+networks:
+  app-network:

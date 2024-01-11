@@ -1,0 +1,6 @@
+[submodule "backend_ts/backend-time-manager"]
+	path = backend_ts/backend-time-manager
+	url = https://github.com/AlexeyVorobyev/backend-time-manager
+[submodule "backend_kt/Backend_time_manager_events"]
+	path = backend_kt/Backend_time_manager_events
+	url = https://github.com/Ivan-Abr/Backend_time_manager_events
