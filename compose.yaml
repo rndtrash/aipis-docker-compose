@@ -22,7 +22,7 @@ services:
     networks:
       app-network:
         aliases:
-          backend-ts
+          - backend-ts
     depends_on:
       - postgresql
     expose:
@@ -39,7 +39,7 @@ services:
     networks:
       app-network:
         aliases:
-          backend-kt
+          - backend-kt
     depends_on:
       - postgresql
       - backend_ts
