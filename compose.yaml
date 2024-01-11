@@ -20,7 +20,9 @@ services:
       DB_HOST: postgresql
       PORT: 8080
     networks:
-      - app-network
+      app-network:
+        aliases:
+          backend-ts
     depends_on:
       - postgresql
     expose:
@@ -28,16 +30,23 @@ services:
     secrets:
       - backend_ts_secrets
 
-  # backend_kt:
-    # build: backend_kt
-    # networks:
-      # - app-network
-    # depends_on:
-      # - postgresql
-    # expose:
-      # - "80"
-    # secrets:
-      # - backend_kt_secrets
+  backend_kt:
+    build: backend_kt
+    environment:
+      SERVER_BACKEND_AUTH_API: "http://backend-ts:8080"
+      DB_URL: "jdbc:postgresql://postgresql:5432/database-time-manager-event"
+      PORT: 8080
+    networks:
+      app-network:
+        aliases:
+          backend-kt
+    depends_on:
+      - postgresql
+      - backend_ts
+    expose:
+      - "8080"
+    secrets:
+      - backend_kt_secrets
 
   nginx:
     image: "nginx:latest"
@@ -50,7 +59,7 @@ services:
       - app-network
     depends_on:
       - backend_ts
-      # - backend_kt
+      - backend_kt
 
 # TODO: эти секреты пока что нахуй никому не усрались, лежат себе в папке /run/secrets
 secrets:
