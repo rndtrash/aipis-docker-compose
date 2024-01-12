@@ -48,11 +48,13 @@ services:
     secrets:
       - backend_kt_secrets
 
-  nginx:
-    image: "nginx:latest"
+  reverse_proxy:
+    build:
+      context: frontend
+      args:
+        VITE_APP_API_AUTH_SERVICE_ADDRESS: "/api/auth-service"
+        VITE_APP_API_EVENT_SERVICE_ADDRESS: "/api/event-service"
     restart: always
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "${ENDPOINT_PORT}:8080"
     networks:

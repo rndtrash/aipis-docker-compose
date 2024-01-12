@@ -4,3 +4,6 @@
 [submodule "backend_kt/Backend_time_manager_events"]
 	path = backend_kt/Backend_time_manager_events
 	url = https://github.com/Ivan-Abr/Backend_time_manager_events
+[submodule "frontend/frontend-time-manager"]
+	path = frontend/frontend-time-manager
+	url = https://github.com/AlexeyVorobyev/frontend-time-manager
